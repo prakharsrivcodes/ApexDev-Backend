@@ -36,4 +36,4 @@ mongoose
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server live on port ${PORT}`);
-})
+});

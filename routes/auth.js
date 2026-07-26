@@ -2,11 +2,22 @@
 const express = require('express');
 const router = express.Router();
 
-// Import the specific controller function for registration logic
-const { registerUser } = require('../controllers/authController');
+// Import authentication controller functions
+const { 
+  registerUser, 
+  loginUser, 
+  getUserProfile 
+} = require('../controllers/authController');
 
-// Define a POST endpoint for '/register' and attach the registerUser controller logic
+// Import authentication middleware for token verification
+const { protect } = require('../middleware/authMiddleware');
+
+// Public endpoints
 router.post('/register', registerUser);
+router.post('/login', loginUser);
 
-// Export the configured router to be mounted in server.js
+// Protected endpoints (Requires valid JWT token in Authorization header)
+router.get('/profile', protect, getUserProfile);
+
+// Export router instance for mounting in server.js
 module.exports = router;
