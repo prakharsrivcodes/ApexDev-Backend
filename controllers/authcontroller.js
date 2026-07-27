@@ -20,16 +20,11 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists with this email' });
     }
 
-    // Encrypt password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    // password is one i gave by hash it became more secure and encrypted
-
-    // Save user to DB
+    // Save user to DB (Mongoose handles password securely)
     const newUser = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password,
       role: role || 'student',
     });
 
@@ -73,11 +68,10 @@ const loginUser = async (req, res) => {
     }
 
     // Step F: Password matched! Create a JWT Token containing user's unique ID and role.
-    // This token acts like a digital ID card for the user.
     const token = jwt.sign(
-      { id: user._id, role: user.role }, //data inside token payload
-      'MY_SUPER_SECRET_KEY_123', // Secret key used to sign and encrypt the token
-      { expiresIn: '1d' }         // Token will automatically expire in 1 day one of option is to use env variable for secret key instead of hardcoding it
+      { id: user._id, role: user.role }, // data inside token payload
+      process.env.JWT_SECRET,           // Secret key strictly loaded from .env
+      { expiresIn: '1d' }               // Token automatically expires in 1 day
     );
 
     // Step G: Send 200 OK response back with the generated token and user details
@@ -97,18 +91,25 @@ const loginUser = async (req, res) => {
   }
 };
 
+// 3. GET USER PROFILE CONTROLLER
 // @desc    Get user profile
 // @route   GET /api/auth/profile
 // @access  Private
 const getUserProfile = async (req, res) => {
   try {
-    // req.user is populated by the protect middleware after token verification
+    // Fetch fresh user data from database using ID from token payload, excluding hashed password field
+    const user = await User.findById(req.user.id).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found in database' });
+    }
+
     res.status(200).json({
       message: 'Profile retrieved successfully',
-      user: req.user
+      user: user
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error while fetching profile' });
+    res.status(500).json({ message: 'Server error while fetching profile', error: error.message });
   }
 };
 

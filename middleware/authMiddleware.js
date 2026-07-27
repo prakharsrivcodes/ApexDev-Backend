@@ -12,9 +12,8 @@ const protect = (req, res, next) => {
       // 2. Extract the actual token string from the Authorization header
       token = req.headers.authorization.split(' ')[1];
 
-      // 3. Verify the token using the secret key
-      // decoded is the payload of the token, which contains user information name,id etc not password
-      const decoded = jwt.verify(token, 'MY_SUPER_SECRET_KEY_123');
+      // 3. Verify the token using the secret key from .env file
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // 4. Attach the decoded user data to the request object
       req.user = decoded;

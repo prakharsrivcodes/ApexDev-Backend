@@ -1,2 +1,9 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Environment Variables & Secrets
 .env
+.env.local
+
+# Logs
+*.log
