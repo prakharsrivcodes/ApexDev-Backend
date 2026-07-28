@@ -25,7 +25,8 @@ app.use(cors());
 app.use(express.json());
 
 // Sanitize request body, query parameters, and URL params against NoSQL query injection used after json parsing middleware to prevent malicious MongoDB operators from being injected into queries
-app.use(mongoSanitize());
+
+// app.use(mongoSanitize());
 
 // Configure IP-based rate limiting policy to prevent DDoS and brute-force attacks
 const apiLimiter = rateLimit({
@@ -44,6 +45,7 @@ app.use('/api', apiLimiter);
 
 // Import the authentication router module
 const authRoutes = require('./routes/auth');
+const errorMiddleware = require('./middleware/errorMiddleware');
 
 // Mount all authentication endpoints under the '/api/auth' base path
 app.use('/api/auth', authRoutes);
@@ -60,6 +62,7 @@ mongoose
   .catch((err) => console.log('MongoDB Connection Error:', err));
 
 // Set server port and start listening for incoming network requests
+app.use(errorMiddleware);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server live on port ${PORT}`);
