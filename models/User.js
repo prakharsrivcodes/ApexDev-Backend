@@ -21,10 +21,12 @@ const userSchema = new mongoose.Schema(
       minlength: [6, 'Password must be at least 6 characters long'],
     },
     role: {
-      type: String,
-      enum: ['student', 'developer', 'admin'],
-      default: 'student',
-    },
+    type: String,
+    // enum = the only allowed values for this field, anything else gets rejected
+    enum: ['jobSeeker', 'recruiter', 'admin'],
+    // default value if no role is sent during registration
+    default: 'jobSeeker',
+},
   },
   {
     timestamps: true,
