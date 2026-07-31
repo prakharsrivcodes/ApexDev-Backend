@@ -45,10 +45,18 @@ app.use('/api', apiLimiter);
 
 // Import the authentication router module
 const authRoutes = require('./routes/auth');
+// Import the company router module
+const companyRoutes = require('./routes/company');
+// Import the job offer router module
+const jobRoutes = require('./routes/job');
 const errorMiddleware = require('./middleware/errorMiddleware');
 
 // Mount all authentication endpoints under the '/api/auth' base path
 app.use('/api/auth', authRoutes);
+// Mount all company endpoints under the '/api/companies' base path
+app.use('/api/companies', companyRoutes);
+// Mount all job offer endpoints under the '/api/jobs' base path
+app.use('/api/jobs', jobRoutes);
 
 // Define a root testing route to verify server status
 app.get('/', (req, res) => {

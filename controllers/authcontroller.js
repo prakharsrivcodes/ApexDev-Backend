@@ -2,8 +2,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-// NAYA IMPORT — yeh missing tha
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorHandler = require('../utils/errorHandler');
 
@@ -40,7 +38,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 
   const user = await User.findOne({ email });
   if (!user) {
-    return next(new ErrorHandler('Invalid credentials (User not found)', 400));
+    return next(new ErrorHandler('Invalid credentials (User not found)',400));
   }
 
   const isMatch = await bcrypt.compare(password, user.password);

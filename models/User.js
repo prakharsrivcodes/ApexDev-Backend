@@ -32,21 +32,13 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-// Mongoose 9 me pre-save hooks 'next' callback support nahi karte.
-// Ab bas plain async function likhna hota hai — jab function poora
-// execute ho jata hai (ya returned promise resolve ho jaata hai),
-// Mongoose khud samajh jaata hai ki hook complete ho gaya, aur aage badh jaata hai.
 userSchema.pre('save', async function () {
-  // 'this' abhi bhi current document ko refer karta hai, jaisa pehle tha.
   if (!this.isModified('password')) {
-    return; // bas function se return kar do — 'next()' call karne ki zaroorat nahi
+    return; 
   }
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  // Function yahan khatam ho jata hai, koi next() nahi chahiye.
-  // Mongoose await karta hai is poori async function ke complete hone ka.
 });
 
 const User = mongoose.model('User', userSchema);

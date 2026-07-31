@@ -23,7 +23,7 @@ const createCompany = asyncHandler(async (req, res, next) => {
 
 // 2. GET ALL COMPANIES
 const getAllCompanies = asyncHandler(async (req, res, next) => {
-  const companies = await Company.find(); // saari companies laao DB se
+  const companies = await Company.find(); 
 
   res.status(200).json({
     message: 'Companies fetched successfully',
