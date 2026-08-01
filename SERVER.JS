@@ -63,7 +63,11 @@ app.get('/', (req, res) => {
   res.send('ApexDev IS LIVE');
 });
 
+const chatbotRoutes = require('./routes/chatbot');
+// ...
+app.use('/api/chatbot', chatbotRoutes);
 // Connect to local MongoDB server using environment variables
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Database Successfully Connected'))
