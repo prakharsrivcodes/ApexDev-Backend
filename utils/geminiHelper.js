@@ -21,7 +21,7 @@ Respond ONLY in this exact JSON format, nothing else:
 }`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+   model: 'gemini-flash-latest',
     contents: prompt,
   });
 
