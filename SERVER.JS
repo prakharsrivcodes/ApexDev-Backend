@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express'); 
 const mongoose = require('mongoose');
 const cors = require('cors');
+const reportRoutes = require('./routes/report');
 
 // Import security hardening middlewares
 const helmet = require('helmet');
@@ -63,6 +64,7 @@ app.get('/', (req, res) => {
   res.send('ApexDev IS LIVE');
 });
 
+app.use('/api/reports', reportRoutes);
 const chatbotRoutes = require('./routes/chatbot');
 // ...
 app.use('/api/chatbot', chatbotRoutes);
