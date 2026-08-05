@@ -43,13 +43,26 @@ const newJob = await JobOffer.create({
 
 // 2. GET ALL JOB OFFERS — public, with company details populated
 const getAllJobOffers = asyncHandler(async (req, res, next) => {
+  // Read page & limit from query string, e.g. /api/jobs?page=2&limit=5
+  const page = parseInt(req.query.page) || 1;   // default page 1
+  const limit = parseInt(req.query.limit) || 10; // default 10 results per page
+  const skip = (page - 1) * limit;
+  // how many documents to skip
+
   const jobs = await JobOffer.find()
-    .populate('company', 'name isVerified trustScore') 
-    .populate('postedBy', 'name email');                
-//populate does not return the password field of the user, as we are only selecting name and email 
+    .populate('company', 'name isVerified trustScore')
+    .populate('postedBy', 'name email')
+    .skip(skip)
+    .limit(limit);
+
+  const totalJobs = await JobOffer.countDocuments();
+
   res.status(200).json({
     message: 'Job offers fetched successfully',
     count: jobs.length,
+    totalJobs,
+    currentPage: page,
+    totalPages: Math.ceil(totalJobs / limit),
     jobs,
   });
 });

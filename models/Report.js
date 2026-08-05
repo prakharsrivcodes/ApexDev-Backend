@@ -54,6 +54,11 @@ const reportSchema = new mongoose.Schema(
       enum: ['pending', 'reviewed', 'dismissed'],
       default: 'pending',
     },
+    screenshotUrl: {
+    type: String,
+    default: null,
+},
+    
   },
   {
     timestamps: true,
